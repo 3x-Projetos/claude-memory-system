@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del \"C:\\Users\\luisr\\Documents\\Obsidian Vault\\.claude\\commands\\autoallow.md\")",
+      "Bash(del \"C:\\Users\\luisr\\Documents\\Obsidian Vault\\.test-auto-approve.txt\")",
+      "SlashCommand(/auto-approve status)",
+      "WebSearch",
+      "SlashCommand(/end)",
+      "Bash(del .claude.current-session-id 2)",
+      "Bash(nul)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
