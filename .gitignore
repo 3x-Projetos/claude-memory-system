@@ -25,6 +25,7 @@ logs/
 .test-*
 .claude/auto-approve-state
 .claude/.current-session-id
+.claude/settings.local.json
 *.tmp
 *.bak
 
