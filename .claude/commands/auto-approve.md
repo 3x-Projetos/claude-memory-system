@@ -8,9 +8,9 @@ Controla a auto-aprovação de operações com múltiplos níveis em tempo real.
 - `/auto-approve status` - Verifica nível atual
 
 **Níveis de aprovação**:
-- `off` - Nada aprovado automaticamente (padrão seguro)
+- `off` - Nada aprovado automaticamente
 - `edits` - Apenas Edit e Write
-- `bash` - Edit, Write e Bash
+- `bash` - Edit, Write e Bash (padrão recomendado para fluxo fluido)
 - `all` - Todos os tools (sem confirmações)
 
 **Como funciona**:
