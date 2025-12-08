@@ -4,7 +4,7 @@ Sistema de memória hierárquica para Claude CLI com métricas holísticas de im
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude CLI](https://img.shields.io/badge/Claude-CLI-orange.svg)](https://github.com/anthropics/claude-code)
-[![Version](https://img.shields.io/badge/version-2.1-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
+[![Version](https://img.shields.io/badge/version-2.2-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
 
 ---
 
@@ -23,6 +23,16 @@ Sistema completo de memória persistente e hierárquica para Claude CLI que:
 ---
 
 ## ✨ Features
+
+### 🆕 v2.2 - Multi-Provider Support (M011)
+- **Multi-Provider Architecture**: Suporte para múltiplos providers (Claude, LMStudio, etc.)
+- **Estrutura `providers/`**: Integração modular por provider (claude, lmstudio)
+- **Provider-Specific Workflows**: Roteamento de comandos por provider
+- **LMStudio Session Manager**: Auto-checkpoint e persistência de sessão
+- **Rich Summary Handoff**: Resumos estruturados para continuidade seamless
+- **Context Window Tracking**: Monitoramento automático (detecta configuração real)
+- **Cross-Provider Integration**: Timeline unificada via `integration/provider-activities.md`
+- **Permissões Granulares**: RO/RW/APPEND por provider e recurso
 
 ### 🆕 v2.1 - Multi-Resolution Memory (M010.1)
 - **Quick Memories**: Versões resumidas (~50 linhas) para startup rápido
@@ -235,7 +245,20 @@ your-project/
 ├── global-memory.quick.md         # 🆕 v2.1 - Perfil resumido (~50 linhas)
 ├── profile-history/               # Snapshots versionados
 ├── profile-changelog.md           # Histórico de mudanças
-└── projects/                      # Referências a projetos
+├── projects/                      # Referências a projetos
+├── providers/                     # 🆕 v2.2 - Multi-Provider Support
+│   ├── README.md                  # Documentação completa
+│   ├── claude/                    # Provider Claude CLI
+│   │   ├── session-state.md
+│   │   ├── session-state.quick.md
+│   │   └── logs/daily|weekly|monthly/
+│   └── lmstudio/                  # Provider LMStudio
+│       ├── session-state.md
+│       ├── session-state.quick.md
+│       └── logs/daily/
+└── integration/                   # 🆕 v2.2 - Cross-Provider
+    ├── provider-activities.md     # Timeline unificada
+    └── provider-activities.quick.md
 ```
 
 ### Economia de Tokens (Exemplo Real)
@@ -328,14 +351,15 @@ Email: [REDACTED:EMAIL]
   - Gatilhos temporais (sexta/último dia)
   - **84-88% economia** no startup
 
-**Versão atual**: **2.1** (funcional, publicado)
+**Versão atual**: **2.2** (funcional, publicado)
 
 **GitHub**: https://github.com/3x-Projetos/claude-memory-system
 
 **Próximos passos**:
+- M011.1: Dashboard UI para acompanhar multi-provider em tempo real
+- M011.2: Task routing automático (data-driven model selection)
 - M010.2: Project-specific history (logs bidimensionais)
 - M010.3: Algoritmo inteligente de geração de quick memories
-- Testes em ambiente de produção com usuários reais
 
 ---
 

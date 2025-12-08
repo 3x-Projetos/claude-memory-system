@@ -14,12 +14,17 @@ python .claude/redact-pii.py
 ```
 Gera `global-memory.safe.md` + `global-memory.quick.md` (resumida, safe)
 
-### 2. Ler APENAS session-state (seções essenciais)
-Ler `.session-state.md` (primeiras ~40 linhas):
+### 2. Ler APENAS session-state + provider activities (quick)
+Ler `~/.claude-memory/providers/claude/session-state.md` (primeiras ~40 linhas):
 - Última sessão (linhas 2-3)
-- **Aggregation Status** (linhas 8-14) ← NOVO
+- **Aggregation Status** (linhas 8-14)
 - Active Projects (top 3-4)
 - Pendências Ativas (top 5-7)
+
+Ler `~/.claude-memory/integration/provider-activities.quick.md` (~10 linhas):
+- Ver o que LMStudio (ou outros providers) fizeram recentemente
+- Evitar trabalho duplicado
+- Facilitar handoff
 
 **NÃO carregar ainda**: Global memory, logs, project contexts
 Carregar SOB DEMANDA após escolha do usuário.
@@ -116,12 +121,14 @@ Total: ~90 linhas (~1.000 tokens)
 - Daily: 66 linhas
 - **Total: ~704 linhas (~8.000 tokens)**
 
-**Depois (v2.1 - Quick Memories)**:
+**Depois (v2.2 - Multi-Provider)**:
 
 | Cenário | Linhas | Tokens | Economia |
 |---------|--------|--------|----------|
-| Projeto específico | ~120 | ~1.400 | **84%** |
-| Exploração livre | ~90 | ~1.000 | **88%** |
+| Projeto específico | ~130 | ~1.500 | **82%** |
+| Exploração livre | ~100 | ~1.100 | **86%** |
+
+*Obs: +10 linhas vs v2.1 devido a provider-activities.quick.md (visibilidade entre providers)*
 
 ## Gatilhos Temporais
 
