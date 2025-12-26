@@ -226,22 +226,16 @@ rm -rf /tmp/cms
 
 ### Estrutura de Diretórios
 
+**Diretório de Trabalho** (seu projeto):
 ```
-your-project/
-├── .claude-memory.md              # Índice central
-├── .session-state.md              # Working memory + Aggregation Status
-├── .workflow-*.md                 # 7 workflows documentados
-├── logs/
-│   ├── daily/                     # Logs detalhados
-│   ├── weekly/                    # Resumos semanais
-│   └── monthly/                   # Resumos mensais
+your-project/  (ou qualquer diretório onde você trabalha)
 ├── .projects/                     # 🆕 v2.1 - Project-Centric Memory
 │   ├── README.md
 │   └── [project-name]/
 │       ├── .context.md            # Contexto completo do projeto
 │       ├── .context.quick.md      # 🆕 Contexto resumido (~30 linhas)
 │       └── .status.md             # Roadmap, decisões, métricas
-└── .claude/
+└── .claude/                       # Framework (pode ser instalado globalmente)
     ├── commands/                  # 14 slash commands (+2 v2.3)
     │   ├── projects.md            # Dashboard multi-projeto
     │   ├── switch.md              # Context switching
@@ -270,29 +264,59 @@ your-project/
     ├── BRANCH-SKILLS-TODO.md      # 🆕 v2.3 - Skills branch docs
     ├── METRICS-FRAMEWORK.md       # Framework de métricas
     └── IMPLEMENTATION-PLAN.md     # Plano completo
+```
 
-# Memória Global Local (fora do projeto)
-~/.claude-memory/
+**Nota**: O framework evoluiu de memória local por projeto para memória global compartilhada. A estrutura acima mostra apenas os arquivos específicos do projeto. A maior parte da memória (session state, logs, perfil) agora reside em `~/.claude-memory/` (ver abaixo).
+
+---
+
+### Memória Global (centralizada, compartilhada)
+
+**Principal estrutura de memória** (fora do projeto, `~/.claude-memory/`):
+```
+~/.claude-memory/                  # Memória central do framework
 ├── .config.json                   # 🆕 v2.3 - Sync configuration
-├── global-memory.md               # Perfil completo (com PII)
-├── global-memory.safe.md          # Perfil redacted (auto-gerado)
-├── global-memory.quick.md         # 🆕 v2.1 - Perfil resumido (~50 linhas)
-├── profile-history/               # Snapshots versionados
+│                                  #   - sync_enabled: true/false
+│                                  #   - cloud_repo: user's git URL
+│                                  #   - device_name, providers, etc.
+│
+├── global-memory.md               # Perfil do usuário (completo com PII)
+├── global-memory.safe.md          # Auto-gerado (PII redacted)
+├── global-memory.quick.md         # 🆕 v2.1 - Resumido (~50 linhas)
+│
+├── profile-history/               # Snapshots versionados do perfil
 ├── profile-changelog.md           # Histórico de mudanças
-├── projects/                      # Referências a projetos
+│
+├── projects/                      # Referências a projetos ativos
+│
 ├── providers/                     # 🆕 v2.2 - Multi-Provider Support
 │   ├── README.md                  # Documentação completa
+│   │
 │   ├── claude/                    # Provider Claude CLI
-│   │   ├── session-state.md
-│   │   ├── session-state.quick.md
-│   │   └── logs/daily|weekly|monthly/
-│   └── lmstudio/                  # Provider LMStudio
+│   │   ├── session-state.md       # Working memory da sessão atual
+│   │   ├── session-state.quick.md # Versão resumida
+│   │   ├── logs/
+│   │   │   ├── daily/             # Logs detalhados por dia
+│   │   │   ├── weekly/            # Resumos semanais (~85% economia)
+│   │   │   └── monthly/           # Resumos mensais (~93% economia)
+│   │   └── web-sessions/          # 🆕 v2.3 - Exported web sessions
+│   │
+│   └── lmstudio/                  # Provider LMStudio (mesma estrutura)
 │       ├── session-state.md
 │       ├── session-state.quick.md
 │       └── logs/daily/
-└── integration/                   # 🆕 v2.2 - Cross-Provider
-    ├── provider-activities.md     # Timeline unificada
+│
+└── integration/                   # 🆕 v2.2 - Cross-Provider Integration
+    ├── provider-activities.md     # Timeline unificada (todos providers)
     └── provider-activities.quick.md
+```
+
+**Por que memória global?**
+- ✅ Compartilhada entre todos os projetos (perfil único)
+- ✅ Evita duplicação de logs e configuração
+- ✅ Facilita multi-provider (Claude + LMStudio)
+- ✅ Simplifica cloud sync (um repo, todos os devices)
+- ✅ Mantém projetos limpos (apenas contexto específico)
 
 # Cloud Memory (opcional, v2.3)
 ~/.claude-memory-cloud/            # 🆕 v2.3 - Multi-device sync
