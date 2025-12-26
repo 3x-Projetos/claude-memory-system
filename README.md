@@ -242,9 +242,8 @@ your-project/  (ou qualquer diretório onde você trabalha)
     │   ├── project-status.md      # Status update
     │   ├── setup-cloud.md         # 🆕 v2.3 - Cloud sync setup
     │   └── disable-cloud.md       # 🆕 v2.3 - Disable cloud sync
-    ├── handInput/                 # 🆕 v2.3 - Web session integration
-    │   ├── CLI-AGENT-GUIDE-web-session-integration.md
-    │   └── session-*.md           # Exported web sessions
+    ├── handInput/                 # 🆕 v2.3 - Manual input directory
+    │                              #   User-provided files for agent to read/access
     ├── workflows/                 # 🆕 v2.3 - Organized workflows
     │   └── .workflow-*.md         # 7 workflow docs
     ├── performance/               # 🆕 v2.1 - Performance Tracking
@@ -318,7 +317,12 @@ your-project/  (ou qualquer diretório onde você trabalha)
 - ✅ Simplifica cloud sync (um repo, todos os devices)
 - ✅ Mantém projetos limpos (apenas contexto específico)
 
-# Cloud Memory (opcional, v2.3)
+---
+
+### Cloud Memory (opcional, v2.3)
+
+**Estrutura de sincronização multi-device** (opcional, `~/.claude-memory-cloud/`):
+```
 ~/.claude-memory-cloud/            # 🆕 v2.3 - Multi-device sync
 ├── .gitignore                     # Privacy-first rules
 ├── .sync-config.json              # Sync preferences
