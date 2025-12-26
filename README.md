@@ -4,7 +4,7 @@ Sistema de memória hierárquica para Claude CLI com métricas holísticas de im
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude CLI](https://img.shields.io/badge/Claude-CLI-orange.svg)](https://github.com/anthropics/claude-code)
-[![Version](https://img.shields.io/badge/version-2.2-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
+[![Version](https://img.shields.io/badge/version-2.3-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
 
 ---
 
@@ -23,6 +23,28 @@ Sistema completo de memória persistente e hierárquica para Claude CLI que:
 ---
 
 ## ✨ Features
+
+### 🆕 v2.3 - Optional Cloud Sync (2025-12-26)
+- **Multi-Device Memory**: Acesse memórias de qualquer dispositivo (laptop, desktop, mobile, VM)
+- **Optional Cloud Sync**: Framework funciona perfeitamente SEM cloud (local-only por padrão)
+- **No Hardcoded URLs**: Usuários configuram seu próprio repositório cloud
+- **Provider Agnostic**: Suporta qualquer git provider (GitHub, GitLab, Gitea, etc.)
+- **Bootstrap Detection**: Setup interativo detecta e configura cloud automaticamente
+- **Web Session Integration**: Integração de sessões web (ephemeral VMs) via export manual
+- **Privacy First**: PII redação automática antes de sync para cloud
+- **Seamless Handoff**: Trabalhe em Device A, continue em Device B sem perder contexto
+- **Conflict Resolution**: Auto-merge por timestamp, preserva ambas versões em conflito
+- **Device Registry**: Rastreamento de todos dispositivos e último sync
+
+**Comandos novos**:
+- `/setup-cloud`: Configuração interativa de cloud sync (clone existente OU initialize novo)
+- `/disable-cloud`: Desabilita cloud sync (volta para local-only)
+
+**Documentação**:
+- `.claude/MEMORY-ORGANIZATION.md`: Arquitetura local vs cloud (17 KB)
+- `.claude/commands/setup-cloud.md`: Guia completo de setup
+- `.claude/handInput/`: Web session integration guide
+- `.claude/workflows/`: Workflows organizados (7 arquivos)
 
 ### 🆕 v2.2 - Multi-Provider Support (M011)
 - **Multi-Provider Architecture**: Suporte para múltiplos providers (Claude, LMStudio, etc.)
@@ -192,9 +214,11 @@ rm -rf /tmp/cms
 | `/reflect` | Registra métricas de well-being |
 | `/aggregate week\|month` | Força agregação temporal |
 | `/auto-approve on\|bash\|all\|off` | Toggle auto-aprovação |
-| **🆕 `/projects`** | **Dashboard multi-projeto (categorizado)** |
-| **🆕 `/switch [name]`** | **Muda contexto para projeto específico** |
-| **🆕 `/project-status [name]`** | **Atualiza status/roadmap de projeto** |
+| `/projects` | Dashboard multi-projeto (categorizado) |
+| `/switch [name]` | Muda contexto para projeto específico |
+| `/project-status [name]` | Atualiza status/roadmap de projeto |
+| **🆕 `/setup-cloud`** | **Configuração interativa de cloud sync** |
+| **🆕 `/disable-cloud`** | **Desabilita cloud sync (local-only)** |
 
 ---
 
@@ -218,10 +242,17 @@ your-project/
 │       ├── .context.quick.md      # 🆕 Contexto resumido (~30 linhas)
 │       └── .status.md             # Roadmap, decisões, métricas
 └── .claude/
-    ├── commands/                  # 12 slash commands (+3 novos)
-    │   ├── projects.md            # 🆕 Dashboard multi-projeto
-    │   ├── switch.md              # 🆕 Context switching
-    │   └── project-status.md      # 🆕 Status update
+    ├── commands/                  # 14 slash commands (+2 v2.3)
+    │   ├── projects.md            # Dashboard multi-projeto
+    │   ├── switch.md              # Context switching
+    │   ├── project-status.md      # Status update
+    │   ├── setup-cloud.md         # 🆕 v2.3 - Cloud sync setup
+    │   └── disable-cloud.md       # 🆕 v2.3 - Disable cloud sync
+    ├── handInput/                 # 🆕 v2.3 - Web session integration
+    │   ├── CLI-AGENT-GUIDE-web-session-integration.md
+    │   └── session-*.md           # Exported web sessions
+    ├── workflows/                 # 🆕 v2.3 - Organized workflows
+    │   └── .workflow-*.md         # 7 workflow docs
     ├── performance/               # 🆕 v2.1 - Performance Tracking
     │   ├── README.md
     │   ├── TEMPLATE-performance-profile.md
@@ -233,13 +264,16 @@ your-project/
     ├── session-auto-end.py        # Graceful shutdown (parte 2)
     ├── settings.json              # Hooks configurados
     ├── setup-claude-memory.sh     # Bootstrap script
-    ├── AGENT-MODEL-DETECTION.md   # 🆕 Auto-detecção de modelo
-    ├── MEMORY-IMPROVEMENTS.md     # 🆕 Tracking de melhorias
+    ├── AGENT-MODEL-DETECTION.md   # Auto-detecção de modelo
+    ├── MEMORY-IMPROVEMENTS.md     # Tracking de melhorias
+    ├── MEMORY-ORGANIZATION.md     # 🆕 v2.3 - Local vs Cloud architecture
+    ├── BRANCH-SKILLS-TODO.md      # 🆕 v2.3 - Skills branch docs
     ├── METRICS-FRAMEWORK.md       # Framework de métricas
     └── IMPLEMENTATION-PLAN.md     # Plano completo
 
-# Memória Global (fora do projeto)
+# Memória Global Local (fora do projeto)
 ~/.claude-memory/
+├── .config.json                   # 🆕 v2.3 - Sync configuration
 ├── global-memory.md               # Perfil completo (com PII)
 ├── global-memory.safe.md          # Perfil redacted (auto-gerado)
 ├── global-memory.quick.md         # 🆕 v2.1 - Perfil resumido (~50 linhas)
@@ -259,6 +293,29 @@ your-project/
 └── integration/                   # 🆕 v2.2 - Cross-Provider
     ├── provider-activities.md     # Timeline unificada
     └── provider-activities.quick.md
+
+# Cloud Memory (opcional, v2.3)
+~/.claude-memory-cloud/            # 🆕 v2.3 - Multi-device sync
+├── .gitignore                     # Privacy-first rules
+├── .sync-config.json              # Sync preferences
+├── README.md                      # Git guide for users
+├── global/                        # Global profile (PII-OK)
+│   ├── profile.md
+│   ├── profile.safe.md
+│   └── preferences.json
+├── devices/                       # Device registry
+│   ├── laptop-work/
+│   ├── desktop-big/
+│   └── ...
+├── projects/                      # Cross-device project contexts
+├── providers/                     # Finalized logs from all devices
+│   ├── claude/daily|weekly|monthly/
+│   └── lmstudio/...
+├── sync/                          # Sync metadata
+│   ├── device-registry.json
+│   └── conflicts/
+└── integration/
+    └── timeline.md                # Unified cross-device timeline
 ```
 
 ### Economia de Tokens (Exemplo Real)
@@ -351,15 +408,23 @@ Email: [REDACTED:EMAIL]
   - Gatilhos temporais (sexta/último dia)
   - **84-88% economia** no startup
 
-**Versão atual**: **2.2** (funcional, publicado)
+**Melhorias v2.3** (2025-12-26):
+- ✅ **Optional Cloud Sync**: Multi-device memory infrastructure
+  - Framework funciona SEM cloud (local-only padrão)
+  - Suporta qualquer git provider (user-configurable)
+  - Web session integration (manual export)
+  - Device-agnostic (laptop, desktop, mobile, VM, web VM)
+
+**Versão atual**: **2.3** (funcional, publicado)
 
 **GitHub**: https://github.com/3x-Projetos/claude-memory-system
 
 **Próximos passos**:
+- M012: Automatic Cloud Sync Hooks (session-start pull, session-end push)
+- M013: Skills Feature (autonomous activation, skill-creator)
 - M011.1: Dashboard UI para acompanhar multi-provider em tempo real
 - M011.2: Task routing automático (data-driven model selection)
 - M010.2: Project-specific history (logs bidimensionais)
-- M010.3: Algoritmo inteligente de geração de quick memories
 
 ---
 
