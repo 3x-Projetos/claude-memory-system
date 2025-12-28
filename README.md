@@ -4,7 +4,7 @@ Sistema de memória hierárquica para Claude CLI com métricas holísticas de im
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude CLI](https://img.shields.io/badge/Claude-CLI-orange.svg)](https://github.com/anthropics/claude-code)
-[![Version](https://img.shields.io/badge/version-2.3-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
+[![Version](https://img.shields.io/badge/version-3.0-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
 
 ---
 
@@ -19,10 +19,49 @@ Sistema completo de memória persistente e hierárquica para Claude CLI que:
 - **Multi-agent support** com performance tracking por modelo
 - **Zero perda de contexto** entre sessões
 - **Privacidade first** com redação automática de PII
+- **Skills System** com auto-activation baseada em intent
+- **Cloud sync automático** multi-device sem configuração manual
 
 ---
 
 ## ✨ Features
+
+### 🆕 v3.0 - Skills System (2025-12-28)
+- **Auto-Activation Skills**: Skills que ativam automaticamente baseado em descrição (intent-based)
+- **Progressive Disclosure**: SKILL.md conciso (<2,500 palavras) + references/ detalhados
+- **Multi-Device Aware**: Skills entendem cloud sync e coordenação entre devices
+- **3 Skills Incluídas**:
+  - 🔬 **scientist**: Framework científico universal para investigação rigorosa
+  - 🔄 **session-continuity-assistant**: Continuação inteligente multi-device aware
+  - 📓 **note-organizer**: Processamento e organização sistemática de notas
+
+**Skills Architecture**:
+- `.claude/skills/`: Skills distribuídas com framework
+- `~/.claude/skills/`: Skills pessoais instaladas pelo usuário
+- Auto-discovery via description matching (sem invocação explícita)
+- Integração seamless com comandos/workflows existentes
+
+**Uso**:
+- Skills ativam automaticamente quando relevantes
+- Nenhum comando especial necessário
+- Framework detecta intent e carrega skill apropriada
+
+### 🆕 v2.3.1 - Auto Cloud Sync on /end (2025-12-28)
+- **Automatic Sync**: `/end` agora faz git sync automático para cloud repo
+- **Non-Blocking**: Sync nunca bloqueia finalização (logs sempre salvos localmente primeiro)
+- **Multi-Device Coordination**: Pull --rebase automático antes de commit (evita conflicts)
+- **User-Configurable**: Cloud path lido de `.config.json` (não hardcoded!)
+- **Comprehensive Error Handling**: Conflicts, network errors, invalid paths tratados gracefully
+- **Informative Commits**: Mensagens descritivas com device, provider, duration, metrics
+
+**Processo automático**:
+1. Copia `~/.claude-memory/` → `$CLOUD_PATH` (user-configured)
+2. `git pull --rebase` (integra mudanças de outros devices)
+3. `git commit` com mensagem descritiva automática
+4. `git push` para repositório remoto
+5. Tratamento graceful de todos os erros (non-blocking)
+
+**Resultado**: Zero passos manuais para sync multi-device! 🚀
 
 ### 🆕 v2.3 - Optional Cloud Sync (2025-12-26)
 - **Multi-Device Memory**: Acesse memórias de qualquer dispositivo (laptop, desktop, mobile, VM)
@@ -43,6 +82,7 @@ Sistema completo de memória persistente e hierárquica para Claude CLI que:
 **Documentação**:
 - `.claude/MEMORY-ORGANIZATION.md`: Arquitetura local vs cloud (17 KB)
 - `.claude/commands/setup-cloud.md`: Guia completo de setup
+- `.claude/workflows/cloud-sync-on-end.md`: 🆕 Auto-sync workflow
 - `.claude/handInput/`: Web session integration guide
 - `.claude/workflows/`: Workflows organizados (7 arquivos)
 
@@ -122,7 +162,7 @@ Sistema completo de memória persistente e hierárquica para Claude CLI que:
 
 **Opção 1: Clone este repo**
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-memory-system.git
+git clone https://github.com/3x-Projetos/claude-memory-system.git
 cd claude-memory-system
 
 # Usar framework neste diretório
@@ -132,7 +172,7 @@ cd claude-memory-system
 **Opção 2: Bootstrap em projeto existente**
 ```bash
 # Clone repo temporário
-git clone https://github.com/YOUR_USERNAME/claude-memory-system.git /tmp/cms
+git clone https://github.com/3x-Projetos/claude-memory-system.git /tmp/cms
 
 # Execute bootstrap no seu projeto
 bash /tmp/cms/.claude/setup-claude-memory.sh /path/to/your/project
@@ -143,7 +183,7 @@ rm -rf /tmp/cms
 
 ### Configuração
 
-1. **Reinicie Claude CLI** (para registrar hooks e comandos)
+1. **Reinicie Claude CLI** (para registrar hooks, comandos e skills)
 
 2. **Primeiro uso**:
 ```bash
@@ -154,6 +194,7 @@ rm -rf /tmp/cms
 3. **Ao final**:
 ```bash
 # Finaliza e registra sessão
+# 🆕 Agora faz cloud sync automático!
 /end
 ```
 
@@ -163,13 +204,13 @@ rm -rf /tmp/cms
 # Segunda-feira (retomar trabalho)
 /continue
 # ... trabalho ...
-/end
+/end      # 🆕 Auto-sync para cloud!
 
 # Meio da semana (nova feature)
 /new
 # ... trabalho ...
 /reflect  # opcional: registrar well-being
-/end
+/end      # 🆕 Auto-sync para cloud!
 
 # Fim da semana
 /aggregate week
@@ -199,6 +240,7 @@ rm -rf /tmp/cms
 5. **`.workflow-monthly-aggregation.md`**: Agregação mensal
 6. **`.workflow-profile-update.md`**: Atualização de perfil
 7. **`.workflow-metrics-collection.md`**: Coleta de métricas
+8. **`.workflow-cloud-sync-on-end.md`**: 🆕 Auto-sync workflow
 
 ### Comandos Slash
 
@@ -209,7 +251,7 @@ rm -rf /tmp/cms
 | `/new` | Nova atividade (awareness sem pressão) |
 | `/memory` | Consulta ferramentas disponíveis |
 | `/organize` | Organiza notas com workflow padrão |
-| `/end` | Finaliza sessão (log + métricas + state) |
+| `/end` | 🆕 **Finaliza sessão + auto cloud sync!** |
 | `/update-profile` | Atualiza perfil global manualmente |
 | `/reflect` | Registra métricas de well-being |
 | `/aggregate week\|month` | Força agregação temporal |
@@ -217,8 +259,20 @@ rm -rf /tmp/cms
 | `/projects` | Dashboard multi-projeto (categorizado) |
 | `/switch [name]` | Muda contexto para projeto específico |
 | `/project-status [name]` | Atualiza status/roadmap de projeto |
-| **🆕 `/setup-cloud`** | **Configuração interativa de cloud sync** |
-| **🆕 `/disable-cloud`** | **Desabilita cloud sync (local-only)** |
+| `/setup-cloud` | Configuração interativa de cloud sync |
+| `/disable-cloud` | Desabilita cloud sync (local-only) |
+
+### Skills (v3.0)
+
+Skills ativam **automaticamente** quando relevantes (intent-based):
+
+| Skill | Trigger Examples | Descrição |
+|-------|------------------|-----------|
+| 🔬 **scientist** | "investigate", "analyze systematically", "evidence-based" | Framework científico universal |
+| 🔄 **session-continuity-assistant** | "continue session", "resume work", "what was I doing" | Continuação inteligente multi-device |
+| 📓 **note-organizer** | "organize notes", "[raw]", "[organized]" | Processamento sistemático de notas |
+
+**Sem comandos especiais**: Skills ativam automaticamente baseado no seu input!
 
 ---
 
@@ -229,24 +283,29 @@ rm -rf /tmp/cms
 **Diretório de Trabalho** (seu projeto):
 ```
 your-project/  (ou qualquer diretório onde você trabalha)
-├── .projects/                     # 🆕 v2.1 - Project-Centric Memory
+├── .projects/                     # v2.1 - Project-Centric Memory
 │   ├── README.md
 │   └── [project-name]/
 │       ├── .context.md            # Contexto completo do projeto
-│       ├── .context.quick.md      # 🆕 Contexto resumido (~30 linhas)
+│       ├── .context.quick.md      # Contexto resumido (~30 linhas)
 │       └── .status.md             # Roadmap, decisões, métricas
 └── .claude/                       # Framework (pode ser instalado globalmente)
-    ├── commands/                  # 14 slash commands (+2 v2.3)
+    ├── commands/                  # 14 slash commands
+    │   ├── end.md                 # 🆕 v2.3.1 - Atualizado com auto-sync
     │   ├── projects.md            # Dashboard multi-projeto
     │   ├── switch.md              # Context switching
     │   ├── project-status.md      # Status update
-    │   ├── setup-cloud.md         # 🆕 v2.3 - Cloud sync setup
-    │   └── disable-cloud.md       # 🆕 v2.3 - Disable cloud sync
-    ├── handInput/                 # 🆕 v2.3 - Manual input directory
-    │                              #   User-provided files for agent to read/access
-    ├── workflows/                 # 🆕 v2.3 - Organized workflows
+    │   ├── setup-cloud.md         # v2.3 - Cloud sync setup
+    │   └── disable-cloud.md       # v2.3 - Disable cloud sync
+    ├── skills/                    # 🆕 v3.0 - Skills System
+    │   ├── scientist/             # Scientific thinking framework
+    │   ├── session-continuity-assistant/  # Smart continuation
+    │   └── note-organizer/        # Note processing
+    ├── handInput/                 # v2.3 - Manual input directory
+    ├── workflows/                 # v2.3 - Organized workflows
+    │   ├── cloud-sync-on-end.md   # 🆕 v2.3.1 - Auto-sync docs
     │   └── .workflow-*.md         # 7 workflow docs
-    ├── performance/               # 🆕 v2.1 - Performance Tracking
+    ├── performance/               # v2.1 - Performance Tracking
     │   ├── README.md
     │   ├── TEMPLATE-performance-profile.md
     │   └── profiles/
@@ -259,8 +318,7 @@ your-project/  (ou qualquer diretório onde você trabalha)
     ├── setup-claude-memory.sh     # Bootstrap script
     ├── AGENT-MODEL-DETECTION.md   # Auto-detecção de modelo
     ├── MEMORY-IMPROVEMENTS.md     # Tracking de melhorias
-    ├── MEMORY-ORGANIZATION.md     # 🆕 v2.3 - Local vs Cloud architecture
-    ├── BRANCH-SKILLS-TODO.md      # 🆕 v2.3 - Skills branch docs
+    ├── MEMORY-ORGANIZATION.md     # v2.3 - Local vs Cloud architecture
     ├── METRICS-FRAMEWORK.md       # Framework de métricas
     └── IMPLEMENTATION-PLAN.md     # Plano completo
 ```
@@ -274,21 +332,22 @@ your-project/  (ou qualquer diretório onde você trabalha)
 **Principal estrutura de memória** (fora do projeto, `~/.claude-memory/`):
 ```
 ~/.claude-memory/                  # Memória central do framework
-├── .config.json                   # 🆕 v2.3 - Sync configuration
+├── .config.json                   # v2.3 - Sync configuration
 │                                  #   - sync_enabled: true/false
 │                                  #   - cloud_repo: user's git URL
+│                                  #   - cloud_path: user's local path
 │                                  #   - device_name, providers, etc.
 │
 ├── global-memory.md               # Perfil do usuário (completo com PII)
 ├── global-memory.safe.md          # Auto-gerado (PII redacted)
-├── global-memory.quick.md         # 🆕 v2.1 - Resumido (~50 linhas)
+├── global-memory.quick.md         # v2.1 - Resumido (~50 linhas)
 │
 ├── profile-history/               # Snapshots versionados do perfil
 ├── profile-changelog.md           # Histórico de mudanças
 │
 ├── projects/                      # Referências a projetos ativos
 │
-├── providers/                     # 🆕 v2.2 - Multi-Provider Support
+├── providers/                     # v2.2 - Multi-Provider Support
 │   ├── README.md                  # Documentação completa
 │   │
 │   ├── claude/                    # Provider Claude CLI
@@ -298,14 +357,14 @@ your-project/  (ou qualquer diretório onde você trabalha)
 │   │   │   ├── daily/             # Logs detalhados por dia
 │   │   │   ├── weekly/            # Resumos semanais (~85% economia)
 │   │   │   └── monthly/           # Resumos mensais (~93% economia)
-│   │   └── web-sessions/          # 🆕 v2.3 - Exported web sessions
+│   │   └── web-sessions/          # v2.3 - Exported web sessions
 │   │
 │   └── lmstudio/                  # Provider LMStudio (mesma estrutura)
 │       ├── session-state.md
 │       ├── session-state.quick.md
 │       └── logs/daily/
 │
-└── integration/                   # 🆕 v2.2 - Cross-Provider Integration
+└── integration/                   # v2.2 - Cross-Provider Integration
     ├── provider-activities.md     # Timeline unificada (todos providers)
     └── provider-activities.quick.md
 ```
@@ -319,32 +378,35 @@ your-project/  (ou qualquer diretório onde você trabalha)
 
 ---
 
-### Cloud Memory (opcional, v2.3)
+### Cloud Memory (opcional, v2.3+)
 
-**Estrutura de sincronização multi-device** (opcional, `~/.claude-memory-cloud/`):
+**Estrutura de sincronização multi-device** (opcional, user-configured path):
 ```
-~/.claude-memory-cloud/            # 🆕 v2.3 - Multi-device sync
+$CLOUD_PATH/                       # v2.3 - Multi-device sync (user-configured!)
 ├── .gitignore                     # Privacy-first rules
 ├── .sync-config.json              # Sync preferences
 ├── README.md                      # Git guide for users
-├── global/                        # Global profile (PII-OK)
-│   ├── profile.md
-│   ├── profile.safe.md
-│   └── preferences.json
+├── global-memory.md               # 🆕 v2.3.1 - Auto-synced by /end
+├── global-memory.safe.md          # 🆕 v2.3.1 - Auto-synced by /end
+├── global-memory.quick.md         # 🆕 v2.3.1 - Auto-synced by /end
+├── .config.json                   # 🆕 v2.3.1 - Auto-synced by /end
 ├── devices/                       # Device registry
 │   ├── laptop-work/
 │   ├── desktop-big/
 │   └── ...
-├── projects/                      # Cross-device project contexts
-├── providers/                     # Finalized logs from all devices
+├── projects/                      # 🆕 v2.3.1 - Auto-synced by /end
+├── providers/                     # 🆕 v2.3.1 - Auto-synced by /end
 │   ├── claude/daily|weekly|monthly/
 │   └── lmstudio/...
-├── sync/                          # Sync metadata
-│   ├── device-registry.json
-│   └── conflicts/
-└── integration/
-    └── timeline.md                # Unified cross-device timeline
+├── integration/                   # 🆕 v2.3.1 - Auto-synced by /end
+│   ├── provider-activities.md
+│   └── provider-activities.quick.md
+└── sync/                          # Sync metadata
+    ├── device-registry.json
+    └── conflicts/
 ```
+
+**🆕 v2.3.1 - Auto-Sync**: Todos os arquivos marcados com 🆕 são sincronizados automaticamente quando você roda `/end`!
 
 ### Economia de Tokens (Exemplo Real)
 
@@ -390,7 +452,12 @@ Sistema híbrido de proteção de PII com multi-resolution:
 
 **Transmissão**:
 - `global-memory.safe.md` - Completa, PII redacted
-- `global-memory.quick.md` - 🆕 Resumida, safe por padrão (~88% menor)
+- `global-memory.quick.md` - Resumida, safe por padrão (~88% menor)
+
+**Cloud** (v2.3+):
+- Auto-redaction antes de sync
+- User-configurable (qualquer git provider)
+- Privacy-first .gitignore rules
 
 **Marcação**:
 ```markdown
@@ -436,6 +503,12 @@ Email: [REDACTED:EMAIL]
   - Gatilhos temporais (sexta/último dia)
   - **84-88% economia** no startup
 
+**Melhorias v2.2** (2025-12-15):
+- ✅ **M011**: Multi-Provider Support
+  - Estrutura providers/ modular
+  - Claude + LMStudio support
+  - Cross-provider timeline unificada
+
 **Melhorias v2.3** (2025-12-26):
 - ✅ **Optional Cloud Sync**: Multi-device memory infrastructure
   - Framework funciona SEM cloud (local-only padrão)
@@ -443,13 +516,27 @@ Email: [REDACTED:EMAIL]
   - Web session integration (manual export)
   - Device-agnostic (laptop, desktop, mobile, VM, web VM)
 
-**Versão atual**: **2.3** (funcional, publicado)
+**Melhorias v2.3.1** (2025-12-28):
+- ✅ **M012**: Automatic Cloud Sync on /end
+  - Auto-sync para cloud repo (zero passos manuais!)
+  - Non-blocking error handling
+  - Multi-device coordination (pull --rebase)
+  - User-configurable cloud path
+
+**Melhorias v3.0** (2025-12-28):
+- ✅ **M013**: Skills System (Phase 1-3)
+  - 3 skills implementadas (scientist, session-continuity, note-organizer)
+  - Auto-activation baseada em intent
+  - Progressive disclosure architecture
+  - Multi-device aware skills
+
+**Versão atual**: **3.0** (funcional, testado, publicado)
 
 **GitHub**: https://github.com/3x-Projetos/claude-memory-system
 
 **Próximos passos**:
-- M012: Automatic Cloud Sync Hooks (session-start pull, session-end push)
-- M013: Skills Feature (autonomous activation, skill-creator)
+- M013.1: skill-creator (Phase 4 - meta-tool para criar skills)
+- M013.2: Skills documentation & testing (Phase 5)
 - M011.1: Dashboard UI para acompanhar multi-provider em tempo real
 - M011.2: Task routing automático (data-driven model selection)
 - M010.2: Project-specific history (logs bidimensionais)
@@ -476,7 +563,7 @@ Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para de
 
 ## 🙏 Agradecimentos
 
-- **Anthropic** por criar o Claude CLI
+- **Anthropic** por criar o Claude CLI e o Claude Code
 - **Pesquisa acadêmica**:
   - HAI Index (Stanford, 2025): Métricas de augmentation vs automation
   - MemTree (2024): Hierarquia temporal para LLMs
@@ -488,8 +575,8 @@ Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para de
 ## 📞 Suporte
 
 - **Documentação**: Veja `.claude/README.md` e `.claude/QUICKSTART.md`
-- **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/claude-memory-system/issues)
-- **Discussões**: [GitHub Discussions](https://github.com/YOUR_USERNAME/claude-memory-system/discussions)
+- **Issues**: [GitHub Issues](https://github.com/3x-Projetos/claude-memory-system/issues)
+- **Discussões**: [GitHub Discussions](https://github.com/3x-Projetos/claude-memory-system/discussions)
 
 ---
 
