@@ -4,7 +4,8 @@ Sistema de memória hierárquica para Claude CLI com métricas holísticas de im
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude CLI](https://img.shields.io/badge/Claude-CLI-orange.svg)](https://github.com/anthropics/claude-code)
-[![Version](https://img.shields.io/badge/version-3.0-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
+[![Version](https://img.shields.io/badge/version-3.1-blue.svg)](https://github.com/3x-Projetos/claude-memory-system/releases)
+
 
 ---
 
