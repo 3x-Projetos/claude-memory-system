@@ -1,0 +1,30 @@
+# Claude Code temporary files
+debug/
+file-history/
+projects/
+shell-snapshots/
+todos/
+plans/
+
+# Cache and state
+.usage-cache.json
+stats-cache.json
+statsig/
+history.jsonl
+auto-approve-state
+statusline-debug.log
+
+# User-specific settings
+.credentials.json
+settings.local.json
+
+# Plugins (managed separately)
+plugins/marketplaces/
+
+# Backups
+**/*.bak
+**/*-temp.md
+
+# OS files
+.DS_Store
+Thumbs.db
