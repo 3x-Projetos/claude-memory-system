@@ -19,7 +19,7 @@ class LMStudioSession:
 
     # Configurações
     API_BASE = "http://127.0.0.1:1234/v1"
-    LMS_CLI = r"C:\Users\luisr\.lmstudio\bin\lms.exe"
+    LMS_CLI = str(Path.home() / ".lmstudio" / "bin" / "lms.exe")  # Windows default
     DEFAULT_MODEL = "qwen/qwen3-vl-30b"
 
     # Thresholds (percentual do limite configurado)
