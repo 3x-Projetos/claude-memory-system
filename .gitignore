@@ -1,30 +1,51 @@
-# Claude Code temporary files
-debug/
-file-history/
-projects/
-shell-snapshots/
-todos/
-plans/
+# Claude Memory System - Git Ignore Configuration
+# Versiona apenas o framework, não os dados pessoais
 
-# Cache and state
-.usage-cache.json
-stats-cache.json
-statsig/
-history.jsonl
-auto-approve-state
-statusline-debug.log
+# ===========================
+# Logs pessoais (NÃO versionar)
+# ===========================
+logs/
+*.log
+.session-state.md
 
-# User-specific settings
-.credentials.json
-settings.local.json
+# Daily logs (contêm informações pessoais)
+2025.*.md
+2024.*.md
+2023.*.md
+*.*.*.md
 
-# Plugins (managed separately)
-plugins/marketplaces/
+# ===========================
+# Memória global (NÃO versionar - contém PII)
+# ===========================
+# Nota: ~/.claude-memory/ está fora deste repo, mas documentando aqui
 
-# Backups
-**/*.bak
-**/*-temp.md
+# ===========================
+# Arquivos temporários e estado
+# ===========================
+.test-*
+.claude/auto-approve-state
+.claude/.current-session-id
+.claude/settings.local.json
+*.tmp
+*.bak
 
-# OS files
+# ===========================
+# Arquivos gerados automaticamente
+# ===========================
+*.safe.md
+
+# ===========================
+# Sistema operacional
+# ===========================
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ===========================
+# O QUE VERSIONAR (framework):
+# ===========================
+# .claude/
+# .workflow-*.md
+# .claude-memory.md
+# .gitignore (este arquivo)
+# README.md

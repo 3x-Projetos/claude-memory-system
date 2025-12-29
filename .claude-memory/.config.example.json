@@ -1,0 +1,27 @@
+{
+  "_comment": "Example configuration file for Claude Memory Framework",
+  "_description": "Copy this to .config.json and customize for your setup",
+
+  "version": "2.3",
+  "sync_enabled": false,
+  "device_name": "my-device",
+  "providers": ["claude"],
+
+  "sync": {
+    "_enabled_when": "sync_enabled is true",
+    "cloud_repo": "https://github.com/your-org/your-memory-cloud.git",
+    "cloud_path": "~/.claude-memory-cloud",
+    "on_session_start": true,
+    "on_session_end": true,
+    "auto_commit": true,
+    "conflict_resolution": "latest-timestamp"
+  },
+
+  "privacy": {
+    "redact_pii": true,
+    "auto_redact": ["email", "phone", "address"],
+    "cloud_safe_only": false
+  },
+
+  "notes": "Framework works perfectly with sync_enabled: false (local-only mode)"
+}
