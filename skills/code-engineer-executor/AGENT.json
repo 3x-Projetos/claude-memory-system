@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "code_engineer_executor",
+  "description": "Navigate, analyze, and modify codebases using LSP semantic navigation. Use when user needs: code refactoring, bug fixing, feature implementation, code analysis. Returns: structured code changes with LSP navigation metadata.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "task": {
+        "type": "string",
+        "description": "The engineering task to execute. Be specific about the goal (e.g., 'Refactor UserAuth class to use dependency injection') and context (e.g., 'to improve testability').",
+        "minLength": 10
+      },
+      "entry_point": {
+        "type": "object",
+        "description": "Starting location for LSP navigation. Provide file path + symbol name OR file path + line/character position.",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Absolute or relative path to the file."
+          },
+          "symbol_name": {
+            "type": "string",
+            "description": "Function/class/variable name to locate (e.g., 'UserAuth', 'handleLogin'). Agent will use LSP to find exact position."
+          },
+          "line": {
+            "type": "integer",
+            "description": "Line number (1-based) if precise position known.",
+            "minimum": 1
+          },
+          "character": {
+            "type": "integer",
+            "description": "Character offset (1-based) if precise position known.",
+            "minimum": 1
+          }
+        },
+        "required": ["file_path"],
+        "additionalProperties": false
+      },
+      "operation": {
+        "type": "string",
+        "enum": ["analyze", "refactor", "fix_bug", "add_feature", "navigate_only"],
+        "description": "Type of code operation. 'analyze' for understanding, 'refactor' for restructuring, 'fix_bug' for corrections, 'add_feature' for new functionality, 'navigate_only' for LSP exploration."
+      },
+      "scope": {
+        "type": "string",
+        "enum": ["symbol", "file", "module", "project"],
+        "description": "Scope of the operation. 'symbol' for single function/class, 'file' for entire file, 'module' for related files, 'project' for cross-cutting changes.",
+        "default": "symbol"
+      },
+      "constraints": {
+        "type": "object",
+        "description": "Optional constraints for the operation.",
+        "properties": {
+          "preserve_behavior": {
+            "type": "boolean",
+            "description": "Must maintain exact existing behavior (for refactoring). Default: true.",
+            "default": true
+          },
+          "max_files": {
+            "type": "integer",
+            "description": "Maximum number of files to modify. Default: 5.",
+            "default": 5,
+            "minimum": 1
+          },
+          "run_tests": {
+            "type": "boolean",
+            "description": "Run tests after changes. Default: false (tests run separately).",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": ["task", "entry_point", "operation"],
+    "additionalProperties": false
+  }
+}
